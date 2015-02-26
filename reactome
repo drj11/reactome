@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+
+"""
+reactome list name - list ids of entities with name
+reactome biopax id - download biopax of entity
+reactome url - show the base API URL used
+
+A reactome command line tool.
+
+Some examples:
+reactome list Apoptosis
+reactome biopax 109581
+"""
+
+# see http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/ReactomeRESTFulAPI.html
+
+import sys
+
+import requests
+
+URL="http://reactomews.oicr.on.ca:8080/ReactomeRESTfulAPI/RESTfulWS/"
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+
+    arg = argv[1:]
+    command = arg[0]
+
+    if command == "list":
+        return command_list(arg)
+    if command == "biopax":
+        return command_biopax(arg)
+    if command == "url":
+        return command_url(arg)
+
+def command_list(arg):
+    name = arg[1]
+
+    post("listByQuery/Pathway", data='name={}'.format(name))
+
+def command_biopax(arg):
+    id = arg[1]
+
+    url = "biopaxExporter/Level2/{}".format(id)
+    get(url)
+    
+def command_url(arg):
+    print(URL)
+
+def post(url_path, data):
+    response = requests.post(URL + url_path, data,
+        headers={'Content-Type': 'text/plain'})
+
+    sys.stdout.buffer.write(response.content)
+
+def get(url_path):
+    response = requests.get(URL + url_path)
+
+    sys.stdout.buffer.write(response.content)
+
+if __name__ == '__main__':
+    main()
