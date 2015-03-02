@@ -8,6 +8,8 @@ reactome url - show the base API URL used
 A reactome command line tool.
 
 Some examples:
+reactome hit SOX2
+reactome diagram 504046
 reactome list Apoptosis
 reactome biopax 109581
 """
