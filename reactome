@@ -53,6 +53,12 @@ def command_biopax(arg):
 
     url = "biopaxExporter/Level2/{}".format(id)
     get(url)
+
+def command_front(arg):
+    species = arg[1]
+
+    url = "frontPageItems/{}".format(species)
+    get(url)
     
 def command_url(arg):
     print(URL)
