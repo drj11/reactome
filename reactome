@@ -24,15 +24,24 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
+    g = globals()
+    commands = [c for c in g.keys() if c.startswith("command_")]
+    commands = [c.replace("command_", "") for c in commands]
+
+    def command_show(arg):
+        for cmd in commands:
+            print("reactome", cmd)
+
     arg = argv[1:]
+    if len(arg) < 1:
+        return command_show(arg)
     command = arg[0]
 
-    if command == "list":
-        return command_list(arg)
-    if command == "biopax":
-        return command_biopax(arg)
-    if command == "url":
-        return command_url(arg)
+    if command in commands:
+        return g["command_" + command](arg)
+    else:
+        return command_show(arg)
+
 
 def command_list(arg):
     name = arg[1]
