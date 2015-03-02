@@ -73,6 +73,9 @@ def command_diagram(arg):
     response = plain("pathwayDiagram/{}/PNG".format(id))
     sys.stdout.buffer.write(base64.b64decode(response.content))
 
+def command_species(arg):
+    get_out("speciesList")
+
 def command_url(arg):
     print(URL)
 
