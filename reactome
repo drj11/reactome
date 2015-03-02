@@ -52,17 +52,24 @@ def command_biopax(arg):
     id = arg[1]
 
     url = "biopaxExporter/Level2/{}".format(id)
-    get(url)
+    get_out(url)
 
 def command_front(arg):
     species = arg[1]
 
     url = "frontPageItems/{}".format(species)
-    get(url)
+    get_out(url)
 
 def command_hit(arg):
-    genes = ",".join(arg)
+    genes = ",".join(arg[1:])
     post("queryHitPathways", genes)
+
+def command_diagram(arg):
+    import base64
+
+    id = arg[1]
+    response = plain("pathwayDiagram/{}/PNG".format(id))
+    sys.stdout.buffer.write(base64.b64decode(response.content))
 
 def command_url(arg):
     print(URL)
@@ -73,11 +80,21 @@ def post(url_path, data):
 
     sys.stdout.buffer.write(response.content)
 
-def get(url_path):
-    response = requests.get(URL + url_path,
-        headers={'Accept': 'application/json'})
+def get(url_path, headers=None):
+    if headers is None:
+        headers={'Accept': 'application/json'}
+    url = URL + url_path
+    response = requests.get(url,
+        headers=headers)
+    return response
+
+def get_out(*l, **k):
+    response = get(*l, **k)
 
     sys.stdout.buffer.write(response.content)
+
+def plain(url_path):
+    return get(url_path, headers=dict())
 
 if __name__ == '__main__':
     main()
