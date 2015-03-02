@@ -55,7 +55,8 @@ def post(url_path, data):
     sys.stdout.buffer.write(response.content)
 
 def get(url_path):
-    response = requests.get(URL + url_path)
+    response = requests.get(URL + url_path,
+        headers={'Accept': 'application/json'})
 
     sys.stdout.buffer.write(response.content)
 
