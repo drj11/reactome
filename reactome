@@ -59,7 +59,11 @@ def command_front(arg):
 
     url = "frontPageItems/{}".format(species)
     get(url)
-    
+
+def command_hit(arg):
+    genes = ",".join(arg)
+    post("queryHitPathways", genes)
+
 def command_url(arg):
     print(URL)
 
