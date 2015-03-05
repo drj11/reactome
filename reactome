@@ -25,13 +25,13 @@ def main(argv=None):
         argv = sys.argv
 
     g = globals()
-    commands = [c for c in g.keys() if c.startswith("command_")]
-    commands = [c.replace("command_", "") for c in commands]
+    commands = [(name.replace("command_", ""), f)
+      for name, f in g.items()
+      if name.startswith("command_")]
 
     def command_show(arg):
-        for cmd in commands:
-            help = [cmd]
-            f = g["command_" + cmd]
+        for name, f in sorted(commands):
+            help = [name]
             doc = getattr(f, "__doc__")
             if doc:
                 help.append(doc)
