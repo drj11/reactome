@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 """
-reactome list name - list ids of entities with name
-reactome biopax id - download biopax of entity
 reactome url - show the base API URL used
 
 A reactome command line tool.
@@ -32,7 +30,12 @@ def main(argv=None):
 
     def command_show(arg):
         for cmd in commands:
-            print("reactome", cmd)
+            help = [cmd]
+            f = g["command_" + cmd]
+            doc = getattr(f, "__doc__")
+            if doc:
+                help.append(doc)
+            print("reactome", *help)
 
     arg = argv[1:]
     if len(arg) < 1:
@@ -46,27 +49,32 @@ def main(argv=None):
 
 
 def command_list(arg):
+    """name - list ids of entities with name"""
     name = arg[1]
 
     post("listByQuery/Pathway", data='name={}'.format(name))
 
 def command_biopax(arg):
+    """id - download biopax of entity"""
     id = arg[1]
 
     url = "biopaxExporter/Level2/{}".format(id)
     get_out(url)
 
 def command_front(arg):
+    """species - front page items for species"""
     species = arg[1]
 
     url = "frontPageItems/{}".format(species)
     get_out(url)
 
 def command_hit(arg):
+    """gene... - pathways containing any of the genes"""
     genes = ",".join(arg[1:])
     post("queryHitPathways", genes)
 
 def command_diagram(arg):
+    """id - get diagram (PNG) for pathway"""
     import base64
 
     id = arg[1]
@@ -74,9 +82,11 @@ def command_diagram(arg):
     sys.stdout.buffer.write(base64.b64decode(response.content))
 
 def command_species(arg):
+    """- the species list"""
     get_out("speciesList")
 
 def command_url(arg):
+    """- the base URL being used for the API"""
     print(URL)
 
 def post(url_path, data):
